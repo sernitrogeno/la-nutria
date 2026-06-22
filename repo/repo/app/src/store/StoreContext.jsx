@@ -28,7 +28,7 @@ function loadInitial() {
   return buildSeed();
 }
 
-function touch(entity, author = 'Elena Vidal') {
+function touch(entity, author = 'Maria Torre') {
   return { ...entity, updatedAt: new Date().toISOString(), author: entity.author || author };
 }
 
