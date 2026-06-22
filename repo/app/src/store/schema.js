@@ -18,7 +18,7 @@ export const uid = (prefix = 'id') => `${prefix}_${(counter++).toString(36)}`;
 
 const now = () => new Date().toISOString();
 
-export function meta(author = 'Elena Vidal') {
+export function meta(author = 'Maria Torre') {
   const t = now();
   return { createdAt: t, updatedAt: t, author, deleted: false };
 }
@@ -261,7 +261,7 @@ export function newPatient(overrides = {}) {
     photo: null,
     admittedAt: new Date().toISOString().slice(0, 10),
     status: 'pending',
-    professional: 'Elena Vidal',
+    professional: 'Maria Torre',
     observations: '',
     lastConsult: '',
     nextReview: '',

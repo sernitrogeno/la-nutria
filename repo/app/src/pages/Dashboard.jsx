@@ -23,7 +23,7 @@ export function Dashboard({ onNav, onOpenPatient }) {
     <div>
       <header className="phead">
         <div className="eyebrow">{C.longDate(C.TODAY)}</div>
-        <h1>Hola, Elena 👋</h1>
+        <h1>Hola, Maria 👋</h1>
         <p className="phead__sub">
           Así va tu día hoy. Tienes {today.length} sesiones y {ready.length} piezas listas para subir.
         </p>
