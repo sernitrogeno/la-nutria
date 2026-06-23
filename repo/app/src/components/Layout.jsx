@@ -37,7 +37,9 @@ function Brand() {
 
 export function Layout({ active, onNav, children }) {
   const [open, setOpen] = useState(false);
-  const { user, signOut } = useAuth();
+  const { user, displayName, signOut } = useAuth();
+  /* Nombre del usuario logado; si no hay backend/login, usamos el de demo. */
+  const name = displayName || ME.name;
   const go = (id) => {
     onNav(id);
     setOpen(false);
@@ -73,9 +75,9 @@ export function Layout({ active, onNav, children }) {
           ))}
         </nav>
         <div className="side__foot">
-          <div className="side__avatar">{initials(ME.name)}</div>
+          <div className="side__avatar">{initials(name)}</div>
           <div className="side__me">
-            <b>{ME.name}</b>
+            <b>{name}</b>
             <span>{user?.email || ME.role}</span>
           </div>
           {user && (

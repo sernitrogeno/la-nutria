@@ -18,7 +18,18 @@ export const uid = (prefix = 'id') => `${prefix}_${(counter++).toString(36)}`;
 
 const now = () => new Date().toISOString();
 
-export function meta(author = 'Elena Vidal') {
+/* Nombre de la persona usuaria actual. Lo fija AuthContext al iniciar/cerrar
+ * sesión; sirve para registrar la autoría de los datos y mostrar el profesional
+ * en los documentos. En modo local (sin login) queda el respaldo de demo. */
+let currentUserName = 'Elena Vidal';
+export function setCurrentUserName(name) {
+  currentUserName = (name && name.trim()) || 'Elena Vidal';
+}
+export function getCurrentUserName() {
+  return currentUserName;
+}
+
+export function meta(author = getCurrentUserName()) {
   const t = now();
   return { createdAt: t, updatedAt: t, author, deleted: false };
 }
@@ -261,7 +272,7 @@ export function newPatient(overrides = {}) {
     photo: null,
     admittedAt: new Date().toISOString().slice(0, 10),
     status: 'pending',
-    professional: 'Elena Vidal',
+    professional: getCurrentUserName(),
     observations: '',
     lastConsult: '',
     nextReview: '',

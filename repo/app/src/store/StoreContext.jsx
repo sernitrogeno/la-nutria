@@ -14,6 +14,7 @@
  */
 import { createContext, useContext, useEffect, useReducer, useCallback, useMemo, useRef } from 'react';
 import { buildSeed } from './seed.js';
+import { getCurrentUserName } from './schema.js';
 import * as backend from '../backend/index.js';
 
 const STORAGE_KEY = 'lanutria.store.v1';
@@ -28,7 +29,7 @@ function loadInitial() {
   return buildSeed();
 }
 
-function touch(entity, author = 'Elena Vidal') {
+function touch(entity, author = getCurrentUserName()) {
   return { ...entity, updatedAt: new Date().toISOString(), author: entity.author || author };
 }
 

@@ -11,6 +11,7 @@
  */
 import { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import { getSession, onAuthChange, signIn, signOut, isConfigured } from '../backend/auth.js';
+import { setCurrentUserName } from '../store/schema.js';
 import { Login } from './Login.jsx';
 
 /* Caché local del store; la limpiamos al cerrar sesión para no dejar datos
@@ -56,6 +57,11 @@ export function AuthProvider({ children }) {
       unsubscribe();
     };
   }, []);
+
+  /* Propaga el nombre del usuario a los módulos no-React (store, export). */
+  useEffect(() => {
+    setCurrentUserName(displayNameFromUser(session?.user ?? null));
+  }, [session]);
 
   const value = useMemo(
     () => {

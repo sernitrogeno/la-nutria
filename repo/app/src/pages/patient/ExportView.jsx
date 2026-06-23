@@ -1,6 +1,6 @@
 import { Button } from '../../components/ui.jsx';
 import { Icon } from '../../components/Icon.jsx';
-import { fullName } from '../../store/schema.js';
+import { fullName, getCurrentUserName } from '../../store/schema.js';
 import { ageFrom } from '../../lib/calendar.js';
 import otter from '../../assets/otter.png';
 
@@ -36,7 +36,7 @@ export function ExportView({ patient }) {
             </div>
           </div>
           <div className="doc__meta">
-            <span>Profesional: {patient.professional || 'Elena Vidal'}</span>
+            <span>Profesional: {patient.professional || getCurrentUserName()}</span>
             <span>Fecha: {today}</span>
             {plan.review && <span>Revisión: {plan.review}</span>}
           </div>
