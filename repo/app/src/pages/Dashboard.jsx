@@ -2,10 +2,12 @@ import { Icon } from '../components/Icon.jsx';
 import { Badge } from '../components/ui.jsx';
 import { useStore } from '../store/StoreContext.jsx';
 import { initials } from '../store/schema.js';
+import { useAuth } from '../auth/AuthContext.jsx';
 import * as C from '../lib/calendar.js';
 
 export function Dashboard({ onNav, onOpenPatient }) {
   const { livePatients, appointments, content } = useStore();
+  const { firstName } = useAuth();
   const today = appointments
     .filter((a) => a.date === C.iso(C.TODAY))
     .sort((a, b) => C.toMin(a.start) - C.toMin(b.start));
@@ -23,7 +25,7 @@ export function Dashboard({ onNav, onOpenPatient }) {
     <div>
       <header className="phead">
         <div className="eyebrow">{C.longDate(C.TODAY)}</div>
-        <h1>Hola, Elena 👋</h1>
+        <h1>Hola, {firstName || 'Elena'} 👋</h1>
         <p className="phead__sub">
           Así va tu día hoy. Tienes {today.length} sesiones y {ready.length} piezas listas para subir.
         </p>
