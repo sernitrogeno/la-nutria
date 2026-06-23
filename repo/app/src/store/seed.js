@@ -211,7 +211,7 @@ export function buildSeed() {
   return { patients, appointments, content, services };
 }
 
-export const ME = { name: 'Maria Torre', role: 'Nutricionista' };
+export const ME = { name: 'Elena Vidal', role: 'Nutricionista' };
 
 export const SESSION_TYPES = ['Primera consulta', 'Seguimiento mensual', 'Revisión de plan', 'Check-in rápido'];
 export const TYPE_COLORS = {

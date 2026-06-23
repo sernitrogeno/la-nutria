@@ -36,7 +36,7 @@ export function ExportView({ patient }) {
             </div>
           </div>
           <div className="doc__meta">
-            <span>Profesional: {patient.professional || 'Maria Torre'}</span>
+            <span>Profesional: {patient.professional || 'Elena Vidal'}</span>
             <span>Fecha: {today}</span>
             {plan.review && <span>Revisión: {plan.review}</span>}
           </div>

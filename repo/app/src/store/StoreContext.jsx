@@ -1,13 +1,20 @@
 /* eslint-disable react-refresh/only-export-components */
-/* Store de LaNutria — Context + reducer + persistencia local.
+/* Store de LaNutria — Context + reducer + persistencia.
  *
- * Capa de datos modular: las páginas nunca tocan localStorage directamente,
- * solo llaman a las acciones de este store. Para conectar un backend más
- * adelante basta con sustituir el reducer/persistencia por llamadas a una API
- * (la forma de las acciones ya está pensada como operaciones CRUD por entidad).
+ * Capa de datos modular: las páginas nunca tocan el almacenamiento
+ * directamente, solo llaman a las acciones de este store. La persistencia
+ * tiene dos modos transparentes para la UI:
+ *
+ *   • Sin backend configurado  → localStorage (la app arranca sin nada).
+ *   • Con Supabase configurado → la nube (ver src/backend/). localStorage
+ *     queda como caché local para arranque instantáneo y trabajo offline.
+ *
+ * La sincronización con el backend es por diferencias: en cada cambio de
+ * estado solo se suben las entidades que realmente cambiaron.
  */
-import { createContext, useContext, useEffect, useReducer, useCallback, useMemo } from 'react';
+import { createContext, useContext, useEffect, useReducer, useCallback, useMemo, useRef } from 'react';
 import { buildSeed } from './seed.js';
+import * as backend from '../backend/index.js';
 
 const STORAGE_KEY = 'lanutria.store.v1';
 
@@ -21,12 +28,16 @@ function loadInitial() {
   return buildSeed();
 }
 
-function touch(entity, author = 'Maria Torre') {
+function touch(entity, author = 'Elena Vidal') {
   return { ...entity, updatedAt: new Date().toISOString(), author: entity.author || author };
 }
 
 function reducer(state, action) {
   switch (action.type) {
+    /* ---- Hidratación desde backend ---- */
+    case 'store/hydrate':
+      return action.state;
+
     /* ---- Pacientes ---- */
     case 'patient/add':
       return { ...state, patients: [touch(action.patient), ...state.patients] };
@@ -89,17 +100,72 @@ function reducer(state, action) {
   }
 }
 
+/* Sube al backend solo lo que cambió entre dos versiones de una colección.
+ * `remove` es opcional: los pacientes no se borran físicamente (borrado lógico
+ * vía upsert con deleted=true), así que para ellos no se pasa. */
+function syncCollection(prev = [], next = [], upsert, remove) {
+  const prevMap = new Map(prev.map((x) => [x.id, x]));
+  for (const item of next) {
+    const before = prevMap.get(item.id);
+    if (before !== item) upsert(item); // referencia nueva o distinta = creado/modificado
+    prevMap.delete(item.id);
+  }
+  if (remove) for (const id of prevMap.keys()) remove(id);
+}
+
 const StoreContext = createContext(null);
 
 export function StoreProvider({ children }) {
   const [state, dispatch] = useReducer(reducer, undefined, loadInitial);
+  const prevRef = useRef(null);
+  const bootstrapped = useRef(false);
 
+  /* Arranque: si hay backend, cargamos de la nube o sembramos si está vacía. */
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      if (backend.isConfigured) {
+        try {
+          const remote = await backend.loadAll();
+          if (cancelled) return;
+          if (remote) {
+            prevRef.current = remote;
+            dispatch({ type: 'store/hydrate', state: remote });
+          } else {
+            await backend.seedAll(state);
+            prevRef.current = state;
+          }
+        } catch (e) {
+          console.warn('[backend:bootstrap]', e.message);
+        }
+      }
+      bootstrapped.current = true;
+    })();
+    return () => {
+      cancelled = true;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  /* Caché local: siempre escribimos (también sirve para modo offline). */
   useEffect(() => {
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
     } catch {
-      /* sin persistencia: la app sigue funcionando en memoria */
+      /* sin persistencia local: la app sigue funcionando en memoria */
     }
+  }, [state]);
+
+  /* Sincronización con el backend por diferencias. */
+  useEffect(() => {
+    const prev = prevRef.current;
+    prevRef.current = state;
+    if (!backend.isConfigured || !bootstrapped.current) return;
+    if (!prev || prev === state) return;
+    syncCollection(prev.patients, state.patients, (p) => backend.savePatient(p));
+    syncCollection(prev.appointments, state.appointments, (a) => backend.saveSimple('appointments', a), (id) => backend.removeRow('appointments', id));
+    syncCollection(prev.content, state.content, (c) => backend.saveSimple('content', c), (id) => backend.removeRow('content', id));
+    syncCollection(prev.services, state.services, (s) => backend.saveSimple('services', s), (id) => backend.removeRow('services', id));
   }, [state]);
 
   /* API de acciones — estable entre renders */
