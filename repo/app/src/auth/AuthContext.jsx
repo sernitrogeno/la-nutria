@@ -19,6 +19,25 @@ const STORE_CACHE_KEY = 'lanutria.store.v1';
 
 const AuthContext = createContext(null);
 
+/* Nombre a mostrar de quien ha iniciado sesión.
+ * Lo tomamos de los metadatos del usuario en Supabase (full_name / name /
+ * display_name, lo que esté relleno). Si no hay nombre, usamos la parte del
+ * email anterior a la @ como respaldo razonable. */
+function displayNameFromUser(user) {
+  if (!user) return null;
+  const m = user.user_metadata || {};
+  const name = m.full_name || m.name || m.display_name;
+  if (name && name.trim()) return name.trim();
+  if (user.email) return user.email.split('@')[0];
+  return null;
+}
+
+/* Solo el nombre de pila (primera palabra), para saludos tipo "Hola, X". */
+function firstNameFromUser(user) {
+  const n = displayNameFromUser(user);
+  return n ? n.split(/\s+/)[0] : null;
+}
+
 export function AuthProvider({ children }) {
   const [session, setSession] = useState(null);
   const [loading, setLoading] = useState(isConfigured); // sin backend no hay que esperar
@@ -39,21 +58,26 @@ export function AuthProvider({ children }) {
   }, []);
 
   const value = useMemo(
-    () => ({
-      session,
-      loading,
-      isConfigured,
-      user: session?.user ?? null,
-      signIn,
-      signOut: async () => {
-        await signOut();
-        try {
-          localStorage.removeItem(STORE_CACHE_KEY);
-        } catch {
-          /* sin almacenamiento: nada que limpiar */
-        }
-      },
-    }),
+    () => {
+      const user = session?.user ?? null;
+      return {
+        session,
+        loading,
+        isConfigured,
+        user,
+        displayName: displayNameFromUser(user),
+        firstName: firstNameFromUser(user),
+        signIn,
+        signOut: async () => {
+          await signOut();
+          try {
+            localStorage.removeItem(STORE_CACHE_KEY);
+          } catch {
+            /* sin almacenamiento: nada que limpiar */
+          }
+        },
+      };
+    },
     [session, loading]
   );
 
