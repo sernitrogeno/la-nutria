@@ -12,6 +12,7 @@ const NAV_GROUPS = [
       { id: 'dashboard', label: 'Panel', icon: 'panel' },
       { id: 'patients', label: 'Pacientes', icon: 'patient' },
       { id: 'agenda', label: 'Agenda', icon: 'agenda' },
+      { id: 'solicitudes', label: 'Solicitudes', icon: 'message' },
     ],
   },
   {

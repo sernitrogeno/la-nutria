@@ -1,0 +1,37 @@
+/* Pantalla de Solicitudes (panel) — usa los tokens del sistema. */
+
+.sol-loading{color:var(--muted);padding:20px 0}
+
+.sol-filtros{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 20px}
+.sol-chip{
+  cursor:pointer;border:1px solid var(--border);background:var(--surface);
+  color:var(--muted);border-radius:999px;padding:7px 14px;font-size:.88rem;font-weight:600;transition:.15s;
+}
+.sol-chip:hover{border-color:var(--accent);color:var(--primary)}
+.sol-chip.is-on{background:var(--primary);color:#fff;border-color:var(--primary)}
+
+.sol-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:16px}
+.sol-card{background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:20px;display:flex;flex-direction:column;gap:12px}
+.sol-card__top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.sol-card__top h3{margin:0;font-size:1.1rem}
+.sol-card__date{font-size:.8rem;color:var(--muted)}
+
+.sol-estado{font-size:.74rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;padding:4px 10px;border-radius:999px;white-space:nowrap}
+.sol-estado--nuevo{background:var(--accent-soft);color:var(--primary)}
+.sol-estado--contactado{background:#fdf2dc;color:#8a6512}
+.sol-estado--convertido{background:#e2f0e6;color:#2f6f4f}
+.sol-estado--descartado{background:#f0eeea;color:#7a756c}
+
+.sol-card__contact{display:flex;flex-direction:column;gap:7px;font-size:.9rem}
+.sol-card__contact a,.sol-card__contact span{display:flex;align-items:center;gap:8px;color:var(--text);text-decoration:none}
+.sol-card__contact a:hover{color:var(--accent)}
+.sol-card__contact svg{color:var(--muted);flex-shrink:0}
+.sol-card__obj{color:var(--muted)}
+
+.sol-card__msg{margin:0;padding:12px 14px;background:var(--surface-2);border-radius:12px;font-size:.92rem;line-height:1.5;color:var(--text);font-style:italic}
+
+.sol-card__actions{display:flex;align-items:center;gap:6px;flex-wrap:wrap;border-top:1px solid var(--border);padding-top:12px;margin-top:auto}
+.sol-card__lbl{font-size:.8rem;color:var(--muted);margin-right:2px}
+.sol-set{cursor:pointer;border:1px solid var(--border);background:var(--bg);color:var(--muted);border-radius:8px;padding:5px 10px;font-size:.82rem;font-weight:600;transition:.15s}
+.sol-set:hover{border-color:var(--accent);color:var(--primary)}
+.sol-set.is-on{background:var(--accent-soft);border-color:var(--accent);color:var(--primary)}

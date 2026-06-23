@@ -13,7 +13,7 @@ import '../styles/landing.css';
 
 const NUTRI = {
   name: 'Maria Torre',
-  role: 'Nutricionista colegiada',
+  role: 'Nutricionista',
   email: 'hola@marianutricion.es',
 };
 
@@ -181,15 +181,14 @@ export function Landing({ onAccess }) {
             <button className="btn btn--primary" onClick={go('contacto')}>Reserva tu primera consulta <Icon name="arrow" size={17} /></button>
             <button className="btn btn--ghost" onClick={go('planes')}>Ver planes</button>
           </div>
-          <div className="lhero__stats">
-            <div><b>+200</b><span>pacientes acompañados</span></div>
-            <div><b>8 años</b><span>de experiencia</span></div>
-            <div><b>4,9★</b><span>valoración media</span></div>
+          <div className="lhero__trust">
+            <span><Icon name="check" size={16} /> + de 2 años de experiencia</span>
+            <span><Icon name="check" size={16} /> Consultas online y presenciales</span>
           </div>
         </div>
         <div className="lhero__art">
-          <div className="lhero__card">
-            <img src={otter} alt="Ilustración LaNutria" />
+          <div className="lhero__photo">
+            <img src="/maria.jpg" alt="Maria Torre, nutricionista" />
             <div className="lhero__badge"><Icon name="heart" size={16} /> Trato cercano y humano</div>
           </div>
         </div>

@@ -44,20 +44,22 @@
 .lhero__text>p{font-size:1.12rem;line-height:1.6;color:var(--muted);max-width:30em}
 .lhero__cta{display:flex;gap:12px;margin:28px 0 0;flex-wrap:wrap}
 .lhero__cta .btn{padding:13px 22px;font-size:1rem}
-.lhero__stats{display:flex;gap:34px;margin-top:38px;flex-wrap:wrap}
-.lhero__stats b{display:block;font-family:'Bricolage Grotesque',sans-serif;font-size:1.7rem;color:var(--primary);line-height:1}
-.lhero__stats span{font-size:.85rem;color:var(--muted)}
+.lhero__trust{display:flex;flex-direction:column;gap:10px;margin-top:34px}
+.lhero__trust span{display:flex;align-items:center;gap:9px;font-weight:500;color:var(--text)}
+.lhero__trust svg{color:var(--accent);flex-shrink:0}
 
 .lhero__art{display:flex;justify-content:center}
-.lhero__card{
-  position:relative;background:var(--side-bg);border-radius:30px;padding:38px;
-  width:100%;max-width:380px;aspect-ratio:1/1;display:flex;align-items:center;justify-content:center;
+.lhero__photo{
+  position:relative;border-radius:28px;overflow:hidden;
+  width:100%;max-width:420px;aspect-ratio:4/3;
   box-shadow:0 30px 60px -20px rgba(34,44,37,.4);
+  border:1px solid var(--border);
 }
-.lhero__card img{width:78%;filter:drop-shadow(0 12px 24px rgba(0,0,0,.25))}
+.lhero__photo img{width:100%;height:100%;object-fit:cover;display:block}
 .lhero__badge{
-  position:absolute;bottom:22px;right:-14px;background:var(--surface);color:var(--primary);
-  border-radius:14px;padding:11px 15px;font-weight:600;font-size:.88rem;
+  position:absolute;bottom:16px;left:16px;background:color-mix(in srgb,var(--surface) 92%,transparent);
+  backdrop-filter:blur(6px);color:var(--primary);
+  border-radius:14px;padding:10px 14px;font-weight:600;font-size:.86rem;
   display:flex;align-items:center;gap:8px;box-shadow:0 10px 28px rgba(34,44,37,.18);
 }
 .lhero__badge svg{color:var(--accent)}
@@ -134,7 +136,7 @@
 @media (max-width:880px){
   .lhero{grid-template-columns:1fr;padding-top:48px}
   .lhero__art{order:-1}
-  .lhero__card{max-width:300px;aspect-ratio:auto;padding:30px}
+  .lhero__photo{max-width:340px}
   .lfeats{grid-template-columns:1fr 1fr}
   .lplans{grid-template-columns:1fr;gap:30px}
   .lplan--hi{transform:none}

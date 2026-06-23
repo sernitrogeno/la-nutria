@@ -6,6 +6,7 @@ import { PatientDetail } from './pages/PatientDetail.jsx';
 import { Agenda } from './pages/Agenda.jsx';
 import { Content } from './pages/Content.jsx';
 import { Services } from './pages/Services.jsx';
+import { Solicitudes } from './pages/Solicitudes.jsx';
 
 function App() {
   const [screen, setScreen] = useState('dashboard');
@@ -30,6 +31,7 @@ function App() {
       <Patients onOpenPatient={openPatient} />
     );
   } else if (screen === 'agenda') view = <Agenda />;
+  else if (screen === 'solicitudes') view = <Solicitudes />;
   else if (screen === 'content') view = <Content />;
   else view = <Services />;
 
