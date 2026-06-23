@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Icon } from './Icon.jsx';
 import { ME } from '../store/seed.js';
 import { initials } from '../store/schema.js';
+import { useAuth } from '../auth/AuthContext.jsx';
 import otterCream from '../assets/otter-cream.png';
 
 const NAV_GROUPS = [
@@ -36,6 +37,7 @@ function Brand() {
 
 export function Layout({ active, onNav, children }) {
   const [open, setOpen] = useState(false);
+  const { user, signOut } = useAuth();
   const go = (id) => {
     onNav(id);
     setOpen(false);
@@ -74,8 +76,13 @@ export function Layout({ active, onNav, children }) {
           <div className="side__avatar">{initials(ME.name)}</div>
           <div className="side__me">
             <b>{ME.name}</b>
-            <span>{ME.role}</span>
+            <span>{user?.email || ME.role}</span>
           </div>
+          {user && (
+            <button className="side__logout" onClick={signOut} aria-label="Cerrar sesión" title="Cerrar sesión">
+              <Icon name="logout" size={18} />
+            </button>
+          )}
         </div>
       </aside>
 

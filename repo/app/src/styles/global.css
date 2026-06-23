@@ -1,5 +1,7 @@
 /* Punto de entrada de estilos de LaNutria.
    design.css  → sistema visual portado del rediseño (paletas, layout, componentes).
-   nutrition.css → estilos del módulo clínico (pacientes, valoración, dieta, seguimiento). */
+   nutrition.css → estilos del módulo clínico (pacientes, valoración, dieta, seguimiento).
+   auth.css → pantalla de inicio de sesión. */
 @import './design.css';
 @import './nutrition.css';
+@import './auth.css';

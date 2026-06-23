@@ -215,7 +215,9 @@ svg{display:block}
 .side__avatar{width:34px;height:34px;border-radius:50%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex-shrink:0;font-family:var(--font-display)}
 .side__me{display:flex;flex-direction:column;min-width:0}
 .side__me b{font-size:13.5px;font-weight:600;color:var(--side-text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.side__me span{font-size:11.5px;color:var(--side-muted)}
+.side__me span{font-size:11.5px;color:var(--side-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.side__logout{margin-left:auto;flex-shrink:0;display:flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:8px;background:transparent;border:1px solid var(--side-border);color:var(--side-muted);cursor:pointer;transition:color .15s,border-color .15s,background .15s}
+.side__logout:hover{color:var(--side-active-text);border-color:var(--side-active);background:var(--side-active)}
 
 /* Topbar variant */
 .topbar{

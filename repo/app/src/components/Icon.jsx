@@ -198,6 +198,13 @@ const ICON_PATHS = {
       <path d="M8 20v-6h8v6" />
     </>
   ),
+  logout: (
+    <>
+      <path d="M14 4H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8" />
+      <path d="M16 16l4-4-4-4" />
+      <path d="M20 12H9" />
+    </>
+  ),
 };
 
 export function Icon({ name, size = 24, className = '', ...rest }) {
