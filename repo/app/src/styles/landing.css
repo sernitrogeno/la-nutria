@@ -148,3 +148,136 @@
   .lfeats{grid-template-columns:1fr}
   .lhero__stats{gap:22px}
 }
+
+/* =========================================================================
+   Secciones nuevas (web de captación)
+   ========================================================================= */
+
+/* Banner de promoción */
+.lpromo-bar{background:var(--primary);color:#fff;text-align:center;font-size:.9rem;padding:9px 16px;display:flex;align-items:center;justify-content:center;gap:8px}
+.lpromo-bar svg{color:var(--tan)}
+
+/* Hero: lista de confianza */
+.lhero__trust{list-style:none;padding:0;margin:30px 0 0;display:flex;flex-wrap:wrap;gap:10px 22px}
+.lhero__trust li{display:flex;align-items:center;gap:8px;font-weight:500;font-size:.95rem}
+.lhero__trust svg{color:var(--accent);flex-shrink:0}
+
+/* Precios */
+.lprice{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.lprice__now{font-family:'Bricolage Grotesque',sans-serif;font-size:1.9rem;font-weight:800;line-height:1;color:inherit}
+.lprice--lg .lprice__now{font-size:2.6rem}
+.lprice__was{text-decoration:line-through;color:var(--muted);font-weight:600}
+.lprice__per{font-size:.9rem;color:var(--muted);font-weight:500}
+.lplan--hi .lprice__per,.lplan--hi .lprice__was{color:rgba(255,255,255,.7)}
+
+/* Cierre de sección */
+.lsec__close{text-align:center;max-width:30em;margin:34px auto 0;font-size:1.15rem;font-weight:600;color:var(--primary)}
+
+/* Problema */
+.lproblems{list-style:none;padding:0;margin:0;max-width:680px;margin:0 auto;display:grid;gap:12px}
+.lproblems li{display:flex;align-items:flex-start;gap:11px;background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:14px 16px;font-size:.98rem}
+.lproblems svg{color:var(--tan);flex-shrink:0;margin-top:2px}
+
+/* Método (pasos) */
+.lsteps{display:grid;grid-template-columns:repeat(5,1fr);gap:16px}
+.lstep{background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:22px 18px}
+.lstep__n{width:34px;height:34px;border-radius:50%;background:var(--primary);color:#fff;font-weight:700;display:flex;align-items:center;justify-content:center;margin-bottom:12px}
+.lstep h3{font-size:1.02rem;margin:0 0 6px}
+.lstep p{color:var(--muted);font-size:.9rem;line-height:1.5;margin:0}
+
+/* Beneficios */
+.lbenefits{list-style:none;padding:0;margin:0;max-width:760px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:12px 24px}
+.lbenefits li{display:flex;align-items:center;gap:10px;font-weight:500}
+.lbenefits svg{color:var(--accent);flex-shrink:0}
+
+/* Programa destacado */
+.lfeatured{background:var(--side-bg);color:var(--side-text);border-radius:26px;padding:42px;box-shadow:0 24px 50px -20px rgba(34,44,37,.45)}
+.lfeatured h2{font-size:clamp(1.8rem,3vw,2.4rem);margin:12px 0}
+.lfeatured__body>p{color:rgba(255,255,255,.82);max-width:48em;line-height:1.6}
+.lfeatured__list{list-style:none;padding:0;margin:20px 0;display:grid;grid-template-columns:1fr 1fr;gap:10px 24px}
+.lfeatured__list li{display:flex;align-items:flex-start;gap:9px;color:rgba(255,255,255,.9);font-size:.94rem}
+.lfeatured__list svg{color:var(--tan);flex-shrink:0;margin-top:2px}
+.lfeatured__cta{display:flex;align-items:center;gap:22px;flex-wrap:wrap;margin-top:8px}
+.lfeatured__cta .btn--primary{background:#fff;color:var(--primary)}
+.lfeatured__price{display:flex;flex-direction:column}
+.lfeatured__price small{color:rgba(255,255,255,.7);font-size:.82rem;margin-top:2px}
+
+/* Planes */
+.lplan__dur{display:flex;align-items:center;gap:6px;color:var(--muted);font-size:.85rem;margin:4px 0}
+.lplan--hi .lplan__dur{color:rgba(255,255,255,.75)}
+.lplan__pay{font-size:.82rem;color:var(--muted);margin:0}
+.lplan--hi .lplan__pay{color:rgba(255,255,255,.75)}
+
+/* Servicios sueltos / mantenimiento */
+.lservices{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:22px}
+.lservice{background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:22px;display:flex;flex-direction:column;gap:10px}
+.lservice__top{display:flex;align-items:baseline;justify-content:space-between;gap:10px}
+.lservice__top h4{margin:0;font-size:1.05rem}
+.lservice__top .lprice__now{font-size:1.3rem}
+.lservice p{color:var(--muted);font-size:.9rem;line-height:1.5;flex:1;margin:0}
+.lservice em{color:var(--text);font-style:italic}
+.lservice .btn{justify-content:center}
+
+/* Llamada de orientación */
+.lcall{display:flex;gap:20px;align-items:flex-start;background:var(--accent-soft);border-radius:22px;padding:34px}
+.lcall__ico{width:54px;height:54px;border-radius:14px;background:var(--surface);color:var(--accent);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.lcall h2{font-size:1.5rem;margin:0 0 8px}
+.lcall p{color:var(--muted);line-height:1.6;margin:0 0 16px;max-width:48em}
+
+/* Sobre mí */
+.labout{display:grid;grid-template-columns:.8fr 1.2fr;gap:38px;align-items:center}
+.labout__photo{border-radius:22px;overflow:hidden;border:1px solid var(--border);box-shadow:0 20px 44px -22px rgba(34,44,37,.4);aspect-ratio:1/1}
+.labout__photo img{width:100%;height:100%;object-fit:cover;display:block}
+.labout__body h2{font-size:clamp(1.6rem,2.6vw,2.2rem);margin:12px 0 10px}
+.labout__body>p{color:var(--text);line-height:1.65}
+.labout__data{list-style:none;padding:0;margin:18px 0;display:flex;flex-direction:column;gap:9px}
+.labout__data li{display:flex;align-items:center;gap:10px;color:var(--muted);font-size:.94rem}
+.labout__data svg{color:var(--accent);flex-shrink:0}
+.labout__note{font-size:.86rem;color:var(--muted);background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:12px 14px;line-height:1.5}
+
+/* Testimonios */
+.ltestis{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+.ltesti{background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:24px;margin:0}
+.ltesti blockquote{margin:0 0 12px;font-size:1.02rem;line-height:1.6}
+.ltesti figcaption{color:var(--muted);font-weight:600;font-size:.9rem}
+
+/* FAQ (accordion accesible) */
+.lfaq{max-width:760px;margin:0 auto;display:flex;flex-direction:column;gap:10px}
+.lfaq__item{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:0 18px}
+.lfaq__item summary{display:flex;align-items:center;justify-content:space-between;gap:12px;cursor:pointer;font-weight:600;padding:16px 0;list-style:none}
+.lfaq__item summary::-webkit-details-marker{display:none}
+.lfaq__item summary svg{color:var(--muted);transition:transform .2s;flex-shrink:0}
+.lfaq__item[open] summary svg{transform:rotate(180deg)}
+.lfaq__item p{margin:0 0 16px;color:var(--muted);line-height:1.6}
+
+/* Consentimiento + soporte */
+.lconsent{display:flex;align-items:flex-start;gap:10px;font-size:.85rem;color:var(--muted);line-height:1.45;cursor:pointer}
+.lconsent input{margin-top:2px;flex-shrink:0}
+.lsupport{font-size:.82rem;color:var(--muted);line-height:1.5;border-left:3px solid var(--border);padding-left:12px;margin-top:18px}
+.lcontact__list a{display:flex;align-items:center;gap:10px;color:var(--text);text-decoration:none}
+.lcontact__list a:hover{color:var(--accent)}
+
+/* Condiciones */
+.lcond{max-width:820px;margin:0 auto;background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:0 20px}
+.lcond summary{cursor:pointer;font-weight:600;padding:16px 0}
+.lcond ul{color:var(--muted);line-height:1.6;font-size:.9rem;padding-left:20px}
+.lcond__legal{font-size:.8rem;color:var(--muted);font-style:italic;padding-bottom:16px;margin:0}
+
+@media (max-width:880px){
+  .lsteps{grid-template-columns:1fr 1fr}
+  .lservices{grid-template-columns:1fr}
+  .lfeatured__list{grid-template-columns:1fr}
+  .labout{grid-template-columns:1fr}
+  .labout__photo{max-width:280px}
+  .lbenefits{grid-template-columns:1fr}
+}
+@media (max-width:520px){
+  .lsteps{grid-template-columns:1fr}
+  .lfeatured{padding:28px 22px}
+  .lcall{flex-direction:column;padding:26px 20px}
+}
+
+/* Accesibilidad: respeta reduce-motion */
+@media (prefers-reduced-motion:reduce){
+  .landing *{scroll-behavior:auto!important;transition:none!important}
+}
