@@ -1,14 +1,21 @@
 /* Pantalla de Solicitudes (panel privado).
  *
- * Muestra las solicitudes enviadas desde el formulario público de la web
- * (tabla `solicitudes` en Supabase). Lectura y cambio de estado requieren
- * sesión iniciada (lo garantizan las políticas RLS). Si no hay backend
- * configurado, se muestra un aviso.
+ * Muestra las solicitudes del formulario público (tabla `solicitudes`) y permite
+ * gestionarlas. Acción clave: "Confirmar pago y dar de alta" → al confirmar que
+ * el pago (Bizum/transferencia) se ha recibido, crea el PACIENTE, registra el
+ * COBRO y la SUSCRIPCIÓN en Finanzas, y marca la solicitud como convertida.
+ *
+ * Las solicitudes se leen/escriben directo contra Supabase (RLS exige login).
+ * Paciente, cobro y suscripción van por el store (que sincroniza con Supabase).
  */
 import { useEffect, useState, useCallback } from 'react';
 import { Icon } from '../components/Icon.jsx';
-import { EmptyState } from '../components/ui.jsx';
+import { EmptyState, SlideOver, TextField, SelectField, Button } from '../components/ui.jsx';
+import { useStore } from '../store/StoreContext.jsx';
+import { newPatient, uid } from '../store/schema.js';
+import { parsePrice, periodicidadFromService, formatMoney, METODOS_PAGO } from '../lib/finance.js';
 import { supabase, isConfigured } from '../backend/supabase.js';
+import * as C from '../lib/calendar.js';
 import '../styles/solicitudes.css';
 
 const ESTADOS = [
@@ -26,11 +33,73 @@ function fechaCorta(iso) {
   }
 }
 
+/* Diálogo de conversión: confirmar pago → alta de paciente. */
+function ConvertDialog({ solicitud, services, onConfirm, onClose }) {
+  const [f, setF] = useState({
+    nombre: solicitud.nombre || '',
+    email: solicitud.email || '',
+    telefono: solicitud.telefono || '',
+    plan: '',
+    importe: '',
+    metodo: 'bizum',
+    pagoConfirmado: false,
+  });
+  const set = (k, v) => setF((s) => ({ ...s, [k]: v }));
+
+  const pickPlan = (name) => {
+    const svc = services.find((s) => s.name === name);
+    setF((s) => ({ ...s, plan: name, importe: svc ? parsePrice(svc.price) : s.importe }));
+  };
+
+  const submit = (e) => {
+    e.preventDefault();
+    if (!f.pagoConfirmado) return;
+    onConfirm(f);
+  };
+
+  return (
+    <SlideOver eyebrow="Alta de paciente" title="Confirmar pago y dar de alta" onClose={onClose}>
+      <form className="eform" onSubmit={submit}>
+        {solicitud.objetivo && <p className="sol-conv__ctx"><Icon name="target" size={14} /> Objetivo: {solicitud.objetivo}</p>}
+        {solicitud.mensaje && <p className="sol-conv__ctx sol-conv__msg">{solicitud.mensaje}</p>}
+
+        <div className="erow">
+          <TextField label="Nombre y apellidos" value={f.nombre} onChange={(e) => set('nombre', e.target.value)} required />
+          <TextField label="Teléfono" value={f.telefono} onChange={(e) => set('telefono', e.target.value)} />
+        </div>
+        <TextField label="Email" type="email" value={f.email} onChange={(e) => set('email', e.target.value)} />
+
+        <SelectField
+          label="Plan contratado"
+          value={f.plan}
+          onChange={(e) => pickPlan(e.target.value)}
+          options={[{ value: '', label: services.length ? 'Elige un plan…' : 'Sin planes (escribe el importe)' }, ...services.map((s) => ({ value: s.name, label: `${s.name} · ${s.price || ''}` }))]}
+        />
+        <div className="erow">
+          <TextField label="Importe pagado (€)" type="number" min="0" step="1" value={f.importe} onChange={(e) => set('importe', e.target.value)} required />
+          <SelectField label="Método de pago" value={f.metodo} onChange={(e) => set('metodo', e.target.value)} options={METODOS_PAGO} />
+        </div>
+
+        <label className="sol-conv__check">
+          <input type="checkbox" checked={f.pagoConfirmado} onChange={(e) => set('pagoConfirmado', e.target.checked)} />
+          <span>Confirmo que he recibido el pago{f.importe ? ` de ${formatMoney(f.importe)}` : ''}.</span>
+        </label>
+
+        <div className="eform__actions">
+          <Button icon="check" type="submit" disabled={!f.pagoConfirmado}>Dar de alta como paciente</Button>
+        </div>
+      </form>
+    </SlideOver>
+  );
+}
+
 export function Solicitudes() {
+  const { services, addPatient, savePayment, saveSubscription } = useStore();
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [filtro, setFiltro] = useState('todos');
+  const [conv, setConv] = useState(null); // solicitud en conversión
 
   const cargar = useCallback(async () => {
     if (!isConfigured || !supabase) {
@@ -43,15 +112,14 @@ export function Solicitudes() {
       .from('solicitudes')
       .select('*')
       .order('created_at', { ascending: false });
-    if (error) {
-      setError(error.message);
-    } else {
-      setItems(data || []);
-    }
+    if (error) setError(error.message);
+    else setItems(data || []);
     setLoading(false);
   }, []);
 
   useEffect(() => {
+    // Carga inicial al montar la pantalla.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     cargar();
   }, [cargar]);
 
@@ -64,6 +132,50 @@ export function Solicitudes() {
         cargar();
       }
     }
+  };
+
+  /* Conversión: crea paciente + suscripción + cobro y marca la solicitud. */
+  const convertir = (f) => {
+    const parts = (f.nombre || '').trim().split(/\s+/);
+    const firstName = parts[0] || '';
+    const lastName = parts.slice(1).join(' ');
+    const patient = newPatient({
+      firstName,
+      lastName,
+      email: f.email || '',
+      phone: f.telefono || '',
+      status: 'active',
+      observations: conv?.objetivo ? `Objetivo inicial: ${conv.objetivo}` : '',
+    });
+    addPatient(patient);
+
+    const svc = services.find((s) => s.name === f.plan);
+    const importe = Number(f.importe) || 0;
+    const sub = {
+      id: uid('sub'),
+      patientId: patient.id,
+      patientName: f.nombre,
+      plan: f.plan || '',
+      importe,
+      periodicidad: svc ? periodicidadFromService(svc.period) : 'puntual',
+      fechaInicio: C.iso(C.TODAY),
+      estado: 'activa',
+    };
+    saveSubscription(sub);
+
+    savePayment({
+      id: uid('pay'),
+      patientId: patient.id,
+      patientName: f.nombre,
+      concepto: f.plan ? `${f.plan} · alta` : 'Alta de paciente',
+      importe,
+      fecha: C.iso(C.TODAY),
+      metodo: f.metodo || 'bizum',
+      subscriptionId: sub.id,
+    });
+
+    cambiarEstado(conv.id, 'convertido');
+    setConv(null);
   };
 
   const visibles = filtro === 'todos' ? items : items.filter((it) => it.estado === filtro);
@@ -86,21 +198,13 @@ export function Solicitudes() {
       </header>
 
       {!isConfigured ? (
-        <EmptyState
-          icon="alert"
-          title="Backend no configurado"
-          message="Conecta Supabase (variables VITE_SUPABASE_*) para recibir y ver las solicitudes."
-        />
+        <EmptyState icon="alert" title="Backend no configurado" message="Conecta Supabase (variables VITE_SUPABASE_*) para recibir y ver las solicitudes." />
       ) : loading ? (
         <p className="sol-loading">Cargando solicitudes…</p>
       ) : error ? (
         <EmptyState icon="alert" title="No se han podido cargar" message={error} />
       ) : items.length === 0 ? (
-        <EmptyState
-          icon="message"
-          title="Aún no hay solicitudes"
-          message="Cuando alguien rellene el formulario de tu web pública, lo verás aquí."
-        />
+        <EmptyState icon="message" title="Aún no hay solicitudes" message="Cuando alguien rellene el formulario de tu web pública, lo verás aquí." />
       ) : (
         <>
           <div className="sol-filtros">
@@ -138,8 +242,16 @@ export function Solicitudes() {
 
                 {it.mensaje && <p className="sol-card__msg">“{it.mensaje}”</p>}
 
+                {it.estado === 'convertido' ? (
+                  <div className="sol-card__done"><Icon name="check" size={16} /> Paciente dado de alta</div>
+                ) : (
+                  <button className="btn btn--primary sol-card__convert" onClick={() => setConv(it)}>
+                    <Icon name="check" size={16} /> Confirmar pago y dar de alta
+                  </button>
+                )}
+
                 <div className="sol-card__actions">
-                  <span className="sol-card__lbl">Marcar como:</span>
+                  <span className="sol-card__lbl">Estado:</span>
                   {ESTADOS.map((e) => (
                     <button
                       key={e.id}
@@ -155,6 +267,8 @@ export function Solicitudes() {
           </div>
         </>
       )}
+
+      {conv && <ConvertDialog solicitud={conv} services={services} onConfirm={convertir} onClose={() => setConv(null)} />}
     </div>
   );
 }
