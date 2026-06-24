@@ -52,7 +52,7 @@ export function Patients({ onOpenPatient }) {
       <header className="phead phead--row">
         <div>
           <h1>Pacientes</h1>
-          <p className="phead__sub">Tu cartera de pacientes. Datos ficticios de demostración.</p>
+          <p className="phead__sub">Tu cartera de pacientes.</p>
         </div>
         <Button icon="plus" onClick={() => setForm({ patient: newPatient(), isNew: true })}>
           Nuevo paciente

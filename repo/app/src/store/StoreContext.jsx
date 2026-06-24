@@ -13,20 +13,25 @@
  * estado solo se suben las entidades que realmente cambiaron.
  */
 import { createContext, useContext, useEffect, useReducer, useCallback, useMemo, useRef } from 'react';
-import { buildSeed } from './seed.js';
 import { getCurrentUserName } from './schema.js';
 import * as backend from '../backend/index.js';
 
 const STORAGE_KEY = 'lanutria.store.v1';
+
+/* Estado vacío: la app arranca SIN datos. Los datos reales llegan de Supabase
+ * (o se van creando desde el panel). Ya no se siembran datos ficticios. */
+function emptyStore() {
+  return { patients: [], appointments: [], content: [], services: [] };
+}
 
 function loadInitial() {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (raw) return JSON.parse(raw);
   } catch {
-    /* almacenamiento no disponible: usamos semilla */
+    /* almacenamiento no disponible: arrancamos en vacío */
   }
-  return buildSeed();
+  return emptyStore();
 }
 
 function touch(entity, author = getCurrentUserName()) {
@@ -94,7 +99,7 @@ function reducer(state, action) {
       return { ...state, services: state.services.filter((s) => s.id !== action.id) };
 
     case 'store/reset':
-      return buildSeed();
+      return emptyStore();
 
     default:
       return state;
@@ -133,8 +138,11 @@ export function StoreProvider({ children }) {
             prevRef.current = remote;
             dispatch({ type: 'store/hydrate', state: remote });
           } else {
-            await backend.seedAll(state);
-            prevRef.current = state;
+            /* Base vacía: arrancamos sin datos (sin sembrar nada falso) y
+             * limpiamos cualquier caché local antigua con datos de demo. */
+            const empty = emptyStore();
+            prevRef.current = empty;
+            dispatch({ type: 'store/hydrate', state: empty });
           }
         } catch (e) {
           console.warn('[backend:bootstrap]', e.message);

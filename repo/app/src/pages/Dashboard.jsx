@@ -15,10 +15,11 @@ export function Dashboard({ onNav, onOpenPatient }) {
   const active = livePatients.filter((c) => c.status === 'active').length;
 
   const stats = [
-    { ico: 'clients', label: 'Pacientes activos', value: active, trend: '+1 este mes' },
+    { ico: 'clients', label: 'Pacientes activos', value: active, trend: null },
     { ico: 'agenda', label: 'Sesiones de hoy', value: today.length, trend: null },
     { ico: 'spark', label: 'Listo para publicar', value: ready.length, trend: null },
-    { ico: 'dollar', label: 'Ingresos est. del mes', value: '1.480€', trend: '+12%' },
+    /* Ingresos: a 0 hasta que añadamos un módulo de cobros/facturación. */
+    { ico: 'dollar', label: 'Ingresos del mes', value: '0€', trend: null },
   ];
 
   return (
@@ -105,10 +106,6 @@ export function Dashboard({ onNav, onOpenPatient }) {
           </div>
         </section>
       </div>
-
-      <p className="dash-note">
-        <Icon name="leaf" size={15} /> Resumen de prueba con datos ficticios. Abre un paciente para ver su ficha clínica completa.
-      </p>
     </div>
   );
 }
