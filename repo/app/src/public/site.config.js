@@ -220,6 +220,7 @@ export const faqs = [
   { q: '¿Trabajas con patologías?', a: 'Depende del caso, la formación y las competencias profesionales. Algunos casos pueden requerir coordinación o derivación a otros profesionales sanitarios.' },
   { q: '¿Se garantizan los resultados?', a: 'No. Los resultados dependen de múltiples factores: punto de partida, adherencia, contexto y evolución individual.' },
   { q: '¿Puedo pagar a plazos?', a: 'Los programas de 12 semanas pueden tener pago fraccionado. El coste total fraccionado puede ser ligeramente superior.' },
+  { q: '¿Cómo se realiza el pago?', a: 'El pago se realiza por transferencia o Bizum antes de empezar. Tras la valoración te envío los datos para el pago y, en los programas de 12 semanas, la opción de pago fraccionado.' },
   { q: '¿Qué programa debería elegir?', a: 'La consulta o llamada de valoración permite recomendar la opción más adecuada para ti.' },
 ];
 

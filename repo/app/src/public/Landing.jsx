@@ -101,7 +101,7 @@ function ValoracionForm() {
       <div className="lf-done">
         <div className="lf-done__ico"><Icon name="check" size={30} /></div>
         <h3>¡Gracias! He recibido tu solicitud</h3>
-        <p>Te escribiré para proponerte una llamada de orientación y resolver tus dudas.</p>
+        <p>Te escribiré para proponerte una llamada de orientación, resolver tus dudas y, si decides empezar, enviarte los datos para el pago.</p>
         <button className="btn btn--ghost" onClick={() => setState('idle')}>Enviar otra</button>
       </div>
     );
