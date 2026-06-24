@@ -3,23 +3,24 @@ import { Badge } from '../components/ui.jsx';
 import { useStore } from '../store/StoreContext.jsx';
 import { initials } from '../store/schema.js';
 import { useAuth } from '../auth/AuthContext.jsx';
+import { monthIncome, formatMoney } from '../lib/finance.js';
 import * as C from '../lib/calendar.js';
 
 export function Dashboard({ onNav, onOpenPatient }) {
-  const { livePatients, appointments, content } = useStore();
+  const { livePatients, appointments, content, payments } = useStore();
   const { firstName } = useAuth();
   const today = appointments
     .filter((a) => a.date === C.iso(C.TODAY))
     .sort((a, b) => C.toMin(a.start) - C.toMin(b.start));
   const ready = content.filter((c) => c.column === 'ready');
   const active = livePatients.filter((c) => c.status === 'active').length;
+  const ingresosMes = monthIncome(payments, C.TODAY);
 
   const stats = [
     { ico: 'clients', label: 'Pacientes activos', value: active, trend: null },
     { ico: 'agenda', label: 'Sesiones de hoy', value: today.length, trend: null },
     { ico: 'spark', label: 'Listo para publicar', value: ready.length, trend: null },
-    /* Ingresos: a 0 hasta que añadamos un módulo de cobros/facturación. */
-    { ico: 'dollar', label: 'Ingresos del mes', value: '0€', trend: null },
+    { ico: 'dollar', label: 'Ingresos del mes', value: formatMoney(ingresosMes), trend: null },
   ];
 
   return (

@@ -21,13 +21,13 @@ const STORAGE_KEY = 'lanutria.store.v1';
 /* Estado vacío: la app arranca SIN datos. Los datos reales llegan de Supabase
  * (o se van creando desde el panel). Ya no se siembran datos ficticios. */
 function emptyStore() {
-  return { patients: [], appointments: [], content: [], services: [] };
+  return { patients: [], appointments: [], content: [], services: [], subscriptions: [], payments: [] };
 }
 
 function loadInitial() {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
-    if (raw) return JSON.parse(raw);
+    if (raw) return { ...emptyStore(), ...JSON.parse(raw) };
   } catch {
     /* almacenamiento no disponible: arrancamos en vacío */
   }
@@ -97,6 +97,32 @@ function reducer(state, action) {
     }
     case 'service/delete':
       return { ...state, services: state.services.filter((s) => s.id !== action.id) };
+
+    /* ---- Suscripciones (contrataciones de planes por paciente) ---- */
+    case 'subscription/save': {
+      const exists = state.subscriptions.some((s) => s.id === action.subscription.id);
+      return {
+        ...state,
+        subscriptions: exists
+          ? state.subscriptions.map((s) => (s.id === action.subscription.id ? action.subscription : s))
+          : [action.subscription, ...state.subscriptions],
+      };
+    }
+    case 'subscription/delete':
+      return { ...state, subscriptions: state.subscriptions.filter((s) => s.id !== action.id) };
+
+    /* ---- Pagos / cobros (dinero realmente recibido) ---- */
+    case 'payment/save': {
+      const exists = state.payments.some((p) => p.id === action.payment.id);
+      return {
+        ...state,
+        payments: exists
+          ? state.payments.map((p) => (p.id === action.payment.id ? action.payment : p))
+          : [action.payment, ...state.payments],
+      };
+    }
+    case 'payment/delete':
+      return { ...state, payments: state.payments.filter((p) => p.id !== action.id) };
 
     case 'store/reset':
       return emptyStore();
@@ -175,6 +201,8 @@ export function StoreProvider({ children }) {
     syncCollection(prev.appointments, state.appointments, (a) => backend.saveSimple('appointments', a), (id) => backend.removeRow('appointments', id));
     syncCollection(prev.content, state.content, (c) => backend.saveSimple('content', c), (id) => backend.removeRow('content', id));
     syncCollection(prev.services, state.services, (s) => backend.saveSimple('services', s), (id) => backend.removeRow('services', id));
+    syncCollection(prev.subscriptions, state.subscriptions, (s) => backend.saveSimple('suscripciones', s), (id) => backend.removeRow('suscripciones', id));
+    syncCollection(prev.payments, state.payments, (p) => backend.saveSimple('pagos', p), (id) => backend.removeRow('pagos', id));
   }, [state]);
 
   /* API de acciones — estable entre renders */
@@ -190,6 +218,10 @@ export function StoreProvider({ children }) {
       setContent: (content) => dispatch({ type: 'content/set', content }),
       saveService: (service) => dispatch({ type: 'service/save', service }),
       deleteService: (id) => dispatch({ type: 'service/delete', id }),
+      saveSubscription: (subscription) => dispatch({ type: 'subscription/save', subscription }),
+      deleteSubscription: (id) => dispatch({ type: 'subscription/delete', id }),
+      savePayment: (payment) => dispatch({ type: 'payment/save', payment }),
+      deletePayment: (id) => dispatch({ type: 'payment/delete', id }),
       reset: () => dispatch({ type: 'store/reset' }),
     }),
     []

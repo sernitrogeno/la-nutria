@@ -18,6 +18,7 @@ const NAV_GROUPS = [
   {
     label: 'Negocio',
     items: [
+      { id: 'finanzas', label: 'Finanzas', icon: 'dollar' },
       { id: 'content', label: 'Contenido', icon: 'content' },
       { id: 'services', label: 'Servicios', icon: 'services' },
     ],

@@ -5,8 +5,11 @@ export const DIAS = ['lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sáb
 export const DIAS_AB = ['lun', 'mar', 'mié', 'jue', 'vie', 'sáb', 'dom'];
 export const DIAS_MINI = ['L', 'M', 'X', 'J', 'V', 'S', 'D'];
 
-/* "Hoy" de referencia de la app (lunes 16 jun 2025), para que los datos semilla encajen. */
-export const TODAY = new Date(2025, 5, 16);
+/* "Hoy" real (a medianoche, sin hora) para los cálculos de fechas de la app. */
+export const TODAY = (() => {
+  const n = new Date();
+  return new Date(n.getFullYear(), n.getMonth(), n.getDate());
+})();
 
 export const pad = (n) => String(n).padStart(2, '0');
 export const iso = (d) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;

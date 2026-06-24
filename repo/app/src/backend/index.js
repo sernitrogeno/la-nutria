@@ -20,22 +20,28 @@ function warn(scope, error) {
  * la base está vacía (primer arranque → el store sembrará los datos demo). */
 export async function loadAll() {
   if (!isConfigured) return null;
-  const [patients, appointments, content, services] = await Promise.all([
+  const [patients, appointments, content, services, subscriptions, payments] = await Promise.all([
     supabase.from('patients').select('*'),
     supabase.from('appointments').select('*'),
     supabase.from('content').select('*'),
     supabase.from('services').select('*'),
+    supabase.from('suscripciones').select('*'),
+    supabase.from('pagos').select('*'),
   ]);
   warn('load.patients', patients.error);
   warn('load.appointments', appointments.error);
   warn('load.content', content.error);
   warn('load.services', services.error);
+  warn('load.suscripciones', subscriptions.error);
+  warn('load.pagos', payments.error);
 
   const empty =
     !(patients.data?.length) &&
     !(appointments.data?.length) &&
     !(content.data?.length) &&
-    !(services.data?.length);
+    !(services.data?.length) &&
+    !(subscriptions.data?.length) &&
+    !(payments.data?.length);
   if (empty) return null;
 
   return {
@@ -43,6 +49,8 @@ export async function loadAll() {
     appointments: (appointments.data || []).map(simpleFromRow),
     content: (content.data || []).map(simpleFromRow),
     services: (services.data || []).map(simpleFromRow),
+    subscriptions: (subscriptions.data || []).map(simpleFromRow),
+    payments: (payments.data || []).map(simpleFromRow),
   };
 }
 
