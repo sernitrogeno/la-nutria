@@ -277,6 +277,99 @@
   .lcall{flex-direction:column;padding:26px 20px}
 }
 
+/* =========================================================================
+   Revisión de planes (tarifa fundadora, comparativa, mantenimiento)
+   ========================================================================= */
+
+/* Precio fundador/estándar (sin tachados) */
+.lprice__tag{display:inline-block;font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--accent);background:var(--accent-soft);padding:3px 9px;border-radius:999px;margin-bottom:4px}
+.lplan--hi .lprice__tag{background:rgba(255,255,255,.16);color:#fff}
+.lprice__after{display:block;font-size:.82rem;color:var(--muted);margin-top:3px}
+.lplan--hi .lprice__after{color:rgba(255,255,255,.72)}
+.lprice__inst{display:block;font-size:.84rem;color:var(--text);margin-top:6px;font-weight:600}
+.lplan--hi .lprice__inst{color:#fff}
+
+/* Tarjeta de programa: para quién, meta */
+.lplan__for{color:var(--muted);font-size:.9rem;line-height:1.5;margin:2px 0 0}
+.lplan--hi .lplan__for{color:rgba(255,255,255,.8)}
+.lplan__meta{display:flex;flex-direction:column;gap:4px;font-size:.86rem;color:var(--muted);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:10px 0;margin:4px 0}
+.lplan__meta b{color:var(--text);font-weight:600}
+.lplan--hi .lplan__meta{border-color:rgba(255,255,255,.18)}
+.lplan--hi .lplan__meta,.lplan--hi .lplan__meta b{color:rgba(255,255,255,.85)}
+
+/* Detalles (acordeón) */
+.lplan__details{margin:2px 0}
+.lplan__details summary{cursor:pointer;font-size:.86rem;font-weight:600;color:var(--primary);display:flex;align-items:center;gap:6px;list-style:none}
+.lplan--hi .lplan__details summary{color:#fff}
+.lplan__details summary::-webkit-details-marker{display:none}
+.lplan__details[open] summary svg{transform:rotate(180deg)}
+.lplan__det-list{list-style:none;padding:0;margin:8px 0 14px;display:flex;flex-direction:column;gap:6px}
+.lplan__det-list li{display:flex;align-items:flex-start;gap:8px;font-size:.86rem;line-height:1.4}
+.lplan__det-list svg{color:var(--accent);flex-shrink:0;margin-top:2px}
+.lplan__det-list--no svg{color:var(--tan)}
+.lplan--hi .lplan__det-list strong{color:#fff}
+
+.lplan strong{display:block;font-size:.82rem;text-transform:uppercase;letter-spacing:.03em;margin-top:6px}
+.lplan__secondary{background:none;border:none;cursor:pointer;color:var(--muted);font-weight:600;font-size:.86rem;text-decoration:underline;padding:4px}
+.lplan__secondary:hover{color:var(--primary)}
+.lplan--hi .lplan__secondary{color:rgba(255,255,255,.8)}
+.lplan--hi .lplan__secondary:hover{color:#fff}
+
+/* Comparativa */
+.lcompare-wrap{margin-top:40px}
+.lcompare-title{text-align:center;font-size:1.3rem;margin:0 0 18px}
+.lcompare{width:100%;border-collapse:collapse;background:var(--surface);border:1px solid var(--border);border-radius:16px;overflow:hidden}
+.lcompare th,.lcompare td{padding:13px 14px;text-align:center;border-bottom:1px solid var(--border);font-size:.92rem}
+.lcompare thead th{background:var(--surface-2);font-weight:700}
+.lcompare thead th:first-child,.lcompare tbody th{text-align:left}
+.lcompare tbody th{font-weight:600;color:var(--text)}
+.lcompare tbody th[scope="row"]{background:var(--surface-2)}
+.lcompare tr:last-child td,.lcompare tr:last-child th{border-bottom:none}
+.lcompare thead th:nth-child(3){color:var(--primary)}
+
+/* Mantenimiento */
+.lmaint{display:grid;grid-template-columns:1fr 1fr;gap:18px;max-width:760px;margin:0 auto}
+.lmaint__card{background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:24px}
+.lmaint__card h4{margin:0 0 6px;font-size:1.1rem}
+.lmaint__price{font-family:'Bricolage Grotesque',sans-serif;font-size:1.7rem;font-weight:800;color:var(--primary)}
+.lmaint__price span{font-size:.9rem;font-weight:500;color:var(--muted)}
+.lmaint__card ul{list-style:none;padding:0;margin:14px 0 0;display:flex;flex-direction:column;gap:8px}
+.lmaint__card li{display:flex;align-items:flex-start;gap:8px;font-size:.9rem}
+.lmaint__card svg{color:var(--accent);flex-shrink:0;margin-top:2px}
+.lmaint__note{display:flex;align-items:center;gap:8px;justify-content:center;color:var(--muted);font-size:.88rem;margin:22px auto 0;max-width:640px;text-align:center}
+.lmaint__note svg{color:var(--tan);flex-shrink:0}
+.lmaint__cta{text-align:center;margin-top:16px}
+
+/* Llamada gratuita: aviso */
+.lcall__warn{display:flex;align-items:flex-start;gap:8px;font-size:.85rem;color:var(--muted);background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:10px 12px;margin:0 0 16px}
+.lcall__warn svg{color:var(--tan);flex-shrink:0;margin-top:2px}
+
+/* Formulario: modo de captación */
+.lform__modo{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.lmodo{display:flex;align-items:center;gap:10px;border:1px solid var(--border);border-radius:12px;padding:12px;cursor:pointer;transition:.15s;background:var(--bg)}
+.lmodo.is-on{border-color:var(--accent);background:var(--accent-soft)}
+.lmodo input{flex-shrink:0}
+.lmodo b{display:block;font-size:.92rem}
+.lmodo i{font-style:normal;font-size:.78rem;color:var(--muted)}
+.lform__cond{font-size:.82rem;color:var(--muted);margin:0}
+.lform__cond a{color:var(--accent)}
+
+@media (max-width:880px){
+  .lmaint{grid-template-columns:1fr}
+  .lplan--hi{order:-1} /* Cambio Sostenible primero en móvil */
+  .lform__modo{grid-template-columns:1fr}
+}
+
+/* Comparativa: en móvil, tabla → tarjetas (sin scroll horizontal) */
+@media (max-width:680px){
+  .lcompare,.lcompare tbody,.lcompare tr,.lcompare td,.lcompare th{display:block}
+  .lcompare thead{display:none}
+  .lcompare tr{border-bottom:1px solid var(--border);padding:6px 0}
+  .lcompare tbody th[scope="row"]{background:transparent;font-size:1rem;padding:10px 14px 4px}
+  .lcompare td{display:flex;justify-content:space-between;gap:14px;text-align:right;border-bottom:none;padding:6px 14px}
+  .lcompare td::before{content:attr(data-col);font-weight:600;color:var(--muted);text-align:left}
+}
+
 /* Accesibilidad: respeta reduce-motion */
 @media (prefers-reduced-motion:reduce){
   .landing *{scroll-behavior:auto!important;transition:none!important}
